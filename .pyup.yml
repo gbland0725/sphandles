@@ -22,6 +22,8 @@ schedule: "every week"
 # allowed: True, False
 search: True
 
+requirements: requirements_dev.txt 
+
 # Specify requirement files by hand, default is empty
 # default: empty
 # allowed: list

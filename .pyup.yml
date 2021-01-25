@@ -20,7 +20,7 @@ schedule: "every week"
 # search for requirement files
 # default: True
 # allowed: True, False
-search: True
+#search: True
 
 requirements: requirements_dev.txt 
 

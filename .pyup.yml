@@ -20,14 +20,16 @@ schedule: "every week"
 # search for requirement files
 # default: True
 # allowed: True, False
-#search: True
+search: True
 
 # Specify requirement files by hand, default is empty
 # default: empty
 # allowed: list
-requirements: 
-	-requirements_dev.txt:
-		update: all
+requirements:
+  - requirements_dev.txt:
+      # update all dependencies and pin them
+      update: all
+      pin: True
 
 # add a label to pull requests, default is not set
 # requires private repo permissions, even on public repos

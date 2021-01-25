@@ -22,12 +22,12 @@ schedule: "every week"
 # allowed: True, False
 #search: True
 
-requirements: requirements_dev.txt 
-
 # Specify requirement files by hand, default is empty
 # default: empty
 # allowed: list
-pin: False
+requirements: 
+	-requirements_dev.txt:
+		update: all
 
 # add a label to pull requests, default is not set
 # requires private repo permissions, even on public repos

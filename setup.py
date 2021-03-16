@@ -53,7 +53,7 @@ setup(
     keywords=[
         'spICP-TOFMS', 'nanoparticles', 'classification',
     ],
-    install_requires= 'numpy~=1.20.0',
+    install_requires= ['numpy~=1.20.0',
 	'pandas~=1.2.1',
 	'jupyter',
 	'pytest',
@@ -63,7 +63,7 @@ setup(
 	'seaborn~=0.11.1',
 	'scipy~=1.6.0',
 	'click'
-	],
+                      ],
     setup_requires=[
         # 'pytest-runner',
     ],

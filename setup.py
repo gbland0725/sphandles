@@ -27,8 +27,7 @@ setup(
     name='sphandles',
     version='0.1.0',
     license='MIT License',
-    description='Sphandles contains a machine-learning algorithm to differentiate Ti-containing natural and engineered NMs measured by spICP-TOFMS data. 
-		It also contains functionality to parse spICP-TOFMS dataframes and generate easy-to-use figures for single particle analysis.',
+    description='Sphandles contains a machine-learning algorithm to differentiate Ti-containing natural and engineered NMs measured by spICP-TOFMS data. It also contains functionality to parse spICP-TOFMS dataframes and generate easy-to-use figures for single particle analysis.',
     author='Garret Bland',
     author_email='garretbland@gmail.com',
     packages=find_packages('src'),

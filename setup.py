@@ -59,9 +59,9 @@ setup(
 	'pytest',
 	'scikit-learn~=0.24.1',
 	'statsmodels',
-	'matplotlib~=3.3.4',
-	'seaborn~=0.11.1',
-	'scipy~=1.5.2',
+	'matplotlib',
+	'seaborn',
+	'scipy',
 	'click'
                       ],
     setup_requires=[

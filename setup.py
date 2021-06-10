@@ -55,7 +55,6 @@ setup(
     ],
     install_requires= ['numpy~=1.19.2',
 	'pandas~=1.1.5',
-	'jupyter',
 	'pytest',
 	'scikit-learn~=0.24.1',
 	'statsmodels',

@@ -61,7 +61,7 @@ setup(
 	'statsmodels',
 	'matplotlib~=3.3.4',
 	'seaborn~=0.11.1',
-	'scipy~=1.6.0',
+	'scipy~=1.5.2',
 	'click'
                       ],
     setup_requires=[

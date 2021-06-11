@@ -18,6 +18,19 @@ class sphandle:
         return m.group(1)
     
     @staticmethod
+    #function to parse old and new data format
+    def tofread_csv(rawdata):
+        #read csv file.
+        data = pd.read_csv(rawdata, error_bad_lines=False)
+        #rennaming 1st column as ID
+        data = data.rename(index=str, columns={"Unnamed: 0": "ID"})
+        #drop columns that have volume and size
+        data = data[data.columns.drop(list(data.filter(regex='vol')))]
+        data = data[data.columns.drop(list(data.filter(regex='size')))]
+        data.columns = data.columns.str.replace('_mass_g','')
+        return data
+    
+    @staticmethod
     def read_csv(fname,dropcols=None, dropzero = None):
         dropcols = dropcols if dropcols else []
         label = parse_filename(fname)

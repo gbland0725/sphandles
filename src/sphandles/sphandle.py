@@ -33,7 +33,7 @@ class sphandle:
     @staticmethod
     def read_csv(fname,dropcols=None, dropzero = None):
         dropcols = dropcols if dropcols else []
-        label = parse_filename(fname)
+        label = sphandle.parse_filename(fname)
         df = pd.read_csv('./{}'.format(fname),
                         index_col=0)
         df = df[[c for c in df.columns if c.endswith('mass_g') and c not in dropcols]].fillna(0.0)

@@ -216,7 +216,7 @@ class mltrain:
     
         print(keys, pd.DataFrame(np.ones_like(labels), columns=['count'], index=labels).groupby('newlabel').sum())
         #hold out some data for testing
-        holdoutdata1, holdoutlabels, trainingdatanat, trainingdataeng = holdoutdata(data, 0.8)
+        holdoutdata1, holdoutlabels, trainingdatanat, trainingdataeng = mltrain.holdoutdata(data, 0.8)
         #combine the left out training dataset and heldout labels. 
         trainingdata = pd.concat([trainingdatanat, trainingdataeng], axis=0)
         traininglabels = trainingdata.index.get_level_values(level='newlabel')
@@ -391,7 +391,7 @@ class mltrain:
         #repeat this process M amount of times
         for _ in range(m):
             #holdout 20% of data. 
-            holdoutdata, holdoutlabels, trainingdatanat, trainingeng = holdoutdata(df, 0.2)
+            holdoutdata, holdoutlabels, trainingdatanat, trainingeng = mltrain.holdoutdata(df, 0.2)
             #create a NP array from 0.05 to 1.05 with 0.05 step increment
             p = np.arange(0.05, 1.05, 0.05)
             #create an empty dataframe

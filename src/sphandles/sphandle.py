@@ -87,7 +87,7 @@ class sphandle:
 
     #user function: loads a list of variable path names and assigns a label 
     @staticmethod
-    def load_and_label(pathname, newlabel):
+    def load_and_label(pathname, newlabel, DROPCOLS):
         data1 = pd.DataFrame()
         for i in glob.glob(pathname):
             data, soil_label = read_csv(i,DROPCOLS)

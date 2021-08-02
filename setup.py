@@ -25,7 +25,7 @@ def read(*names, **kwargs):
 
 setup(
     name='sphandles',
-    version='0.1.8',
+    version='0.1.9',
     license='MIT License',
     description='Sphandles contains a machine-learning algorithm to differentiate Ti-containing natural and engineered NMs measured by spICP-TOFMS data. It also contains functionality to parse spICP-TOFMS dataframes and generate easy-to-use figures for single particle analysis.',
     author='Garret Bland',
@@ -53,10 +53,10 @@ setup(
     keywords=[
         'spICP-TOFMS', 'nanoparticles', 'classification',
     ],
-    install_requires= ['numpy~=1.19.2',
-	'pandas~=1.1.5',
+    install_requires= ['numpy',
+	'pandas',
 	'pytest',
-	'scikit-learn~=0.24.1',
+	'scikit-learn',
 	'statsmodels',
 	'matplotlib',
 	'seaborn',

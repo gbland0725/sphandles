@@ -2,7 +2,6 @@ import re
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
-from pandas.io.parsers import read_csv
 import seaborn as sns
 import glob
 import scipy as sp
@@ -91,7 +90,7 @@ class sphandle:
     def load_and_label(pathname, newlabel, dropcols):
         data1 = pd.DataFrame()
         for i in glob.glob(pathname):
-            data, soil_label = read_csv(i,dropcols)
+            data, soil_label = sphandle.read_csv(i,dropcols)
             data1 = pd.concat([data,data1], axis = 0, sort=False)
         data1['newlabel'] = newlabel
         data1 = data1.set_index('newlabel')
@@ -186,8 +185,8 @@ class sphandle:
         label = []
         for i in glob.glob(datapath + '*'):
             print(i)
-            empty.append(read_csv(i, DROPCOLS)[0])
-            label.append(read_csv(i, DROPCOLS)[1])
+            empty.append(sphandle.read_csv(i, DROPCOLS)[0])
+            label.append(sphandle.read_csv(i, DROPCOLS)[1])
         return empty, label
 
     @staticmethod

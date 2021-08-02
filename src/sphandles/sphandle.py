@@ -2,6 +2,7 @@ import re
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
+from pandas.io.parsers import read_csv
 import seaborn as sns
 import glob
 import scipy as sp

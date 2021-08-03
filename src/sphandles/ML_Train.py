@@ -13,6 +13,7 @@ from sklearn.decomposition import NMF, PCA
 from sklearn.pipeline import make_pipeline, make_union, FeatureUnion
 from sklearn.model_selection import cross_val_score, cross_val_predict
 from sklearn.metrics import confusion_matrix
+from sphandles.sphandle import sphandle
 
 plt.style.use('seaborn-notebook')
 
@@ -102,7 +103,7 @@ class mltrain:
               % (mean_score - std_score, mean_score + std_score, mean_score, std_score))
         y_pred = cross_val_predict(clf, df, labels, cv=3)
         y_prob = cross_val_predict(clf, df, labels, cv=3, method='predict_proba')
-        plot_confusion_matrix(labels, y_pred, labels.unique())
+        mltrain.plot_confusion_matrix(labels, y_pred, labels.unique())
         return y_pred, y_prob, labels, df
 
     @staticmethod
@@ -121,8 +122,8 @@ class mltrain:
     
     @staticmethod
     def graphmaker(df, label, upperbound, name, natdf, savefigs, opencircles = False):
-        toppercent = conditional_probabilities(just_data(df[df[label] > upperbound]), '48Ti')
-        bottompercent = conditional_probabilities(just_data(df[df[label] < upperbound]), '48Ti')
+        toppercent = sphandle.conditional_probabilities(sphandle.just_data(df[df[label] > upperbound]), '48Ti')
+        bottompercent = sphandle.conditional_probabilities(sphandle.just_data(df[df[label] < upperbound]), '48Ti')
         percentdf = pd.DataFrame([toppercent, bottompercent]).T
         percentdf.columns = ['toppercent', 'bottompercent']
         percentdf.reset_index(inplace = True)
@@ -140,7 +141,7 @@ class mltrain:
         #if you want unassociated Ti as a separate category
         if opencircles == True:
             #make the df pure ti df
-            Pure = isotope_pure(just_data(df).drop(columns = '46Ti'), '48Ti')
+            Pure = sphandle.isotope_pure(sphandle.just_data(df).drop(columns = '46Ti'), '48Ti')
             percentdfpure = df.loc[Pure.index]
             df.drop(percentdfpure.index, inplace = True)
 
@@ -165,10 +166,10 @@ class mltrain:
      
     @staticmethod
     def graphmakerm(df, label, upperbound, lowerbound, name, natdf, savefigs, opencircles = False):
-        toppercent = conditional_probabilities(just_data(df[df[label] > upperbound]), '48Ti')
+        toppercent = sphandle.conditional_probabilities(sphandle.just_data(df[df[label] > upperbound]), '48Ti')
         middlepercent = df[df[label] < upperbound]
-        middlepercent = conditional_probabilities(just_data(middlepercent[middlepercent[label] > lowerbound]), '48Ti')
-        bottompercent = conditional_probabilities(just_data(df[df[label] < lowerbound]), '48Ti')
+        middlepercent = sphandle.conditional_probabilities(sphandle.just_data(middlepercent[middlepercent[label] > lowerbound]), '48Ti')
+        bottompercent = sphandle.conditional_probabilities(sphandle.just_data(df[df[label] < lowerbound]), '48Ti')
         percentdf = pd.DataFrame([toppercent, middlepercent, bottompercent]).T
         percentdf.columns = ['toppercent', 'middlepercent', 'bottompercent']
         percentdf.reset_index(inplace = True)
@@ -197,6 +198,8 @@ class mltrain:
         df = pd.concat([bot, middle, top], axis = 0)
 
         ax2 = sns.scatterplot('48Ti', label, 'category', data = df, palette = 'Blues_d', ax = axs[1])
+        Pure = sphandle.isotope_pure(sphandle.just_data(df).drop(columns = '46Ti'), '48Ti')
+        percentdfpure = df.loc[Pure.index]
         ax2 = sns.scatterplot('48Ti', label, 'category', data = percentdfpure, palette = 'Blues_d', ax = axs[1], markers= '+')
         ax2.set_xscale('log')
         ax2.set_xlim([min(natdf['48Ti']), 10**-13])
@@ -225,11 +228,11 @@ class mltrain:
         clf = make_pipeline(
             StandardScaler(with_mean=False),
             FeatureUnion([('nmf', NMF(n_components = 10)), 
-                          ('functiontransformer', FunctionTransformer(get_ti))
+                          ('functiontransformer', FunctionTransformer(mltrain.get_ti))
                          ]),
             LogisticRegressionCV(tol=tolerance, cv=5, max_iter=iterations)
         )
-        y_pred, y_prob, y_true, df = evaluate_model(clf, trainingdata, traininglabels)
+        y_pred, y_prob, y_true, df = mltrain.evaluate_model(clf, trainingdata, traininglabels)
         if savefigs == None:
             plt.savefig('figures/confusionmatrix' + str(keys) + '.png', dpi =300)
 
@@ -248,7 +251,7 @@ class mltrain:
 
         Ticolumn = np.zeros((clf.named_steps['featureunion'].transformer_list[0][1].components_[0].shape))
         Ticolumn[5] = 1
-        Ticolumndf = pd.DataFrame(Ticolumn.T, index=fullset[0].columns)
+        Ticolumndf = pd.DataFrame(Ticolumn.T, index=data.columns)
         comps = pd.concat([comps, Ticolumndf], axis = 1)
         comps.columns = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Ti']
         
@@ -264,10 +267,10 @@ class mltrain:
 
         #Multiply the occurence of the element with the Ti particles by the importance
         multipliedcompscor =multipliedcomps.apply(lambda x: x *
-                                                  conditional_probabilities(
-                                                      just_data(df_with_prob), '48Ti')).reindex(multipliedcomps.index).sum(axis=1)
+                                                  sphandle.conditional_probabilities(
+                                                      sphandle.just_data(df_with_prob), '48Ti')).reindex(multipliedcomps.index).sum(axis=1)
 
-        mc = non_zero_data(pd.DataFrame(multipliedcompscor))
+        mc = sphandle.non_zero_data(pd.DataFrame(multipliedcompscor))
         mc['label'] = ['Eng' if mc.loc[i,0] < 0 else 'Nat' for i in mc.index]
         mc[0] = abs(mc[0])
 
@@ -302,15 +305,15 @@ class mltrain:
              ((((Eng_df_with_prob['48Ti']*(48+32)/48)/ 4.23 * 10 **21)*6/math.pi)**(1/3)).std())
 
         #Printing purity of TiO2 of natural and engineered
-        print(naturalkeys, probability_pure(just_data(Nat_df_with_prob).drop(columns = '46Ti'), '48Ti'))
-        print(engineeredkeys, probability_pure(just_data(Eng_df_with_prob).drop(columns = '46Ti'), '48Ti'))
+        print(naturalkeys, sphandle.probability_pure(sphandle.just_data(Nat_df_with_prob).drop(columns = '46Ti'), '48Ti'))
+        print(engineeredkeys, sphandle.probability_pure(sphandle.just_data(Eng_df_with_prob).drop(columns = '46Ti'), '48Ti'))
 
 
         #Finding the composition of Misclassification
         Nat_df_with_prob = df_with_prob[df_with_prob['newlabel'] == 'Natural']
         Eng_df_with_prob = df_with_prob[df_with_prob['newlabel'] == 'Engineered']
-        Nat = category_split(Nat_df_with_prob, 'Natural', 0.85, 0.15)
-        Eng = category_split(Eng_df_with_prob, 'Engineered', 0.85, 0.15)
+        Nat = sphandle.category_split(Nat_df_with_prob, 'Natural', 0.85, 0.15)
+        Eng = sphandle.category_split(Eng_df_with_prob, 'Engineered', 0.85, 0.15)
         total_correct = (len(Nat[0]) + len(Eng[0]))/ len(df_with_prob)
         total_engcorrect = (len(Eng[0]))/ len(Eng_df_with_prob)
         total_uncertain = (len(Nat[1]) + len(Eng[1]))/ len(df_with_prob)
@@ -337,7 +340,7 @@ class mltrain:
         axs[0].plot(xy_line, 'r--', color = 'red')
         axs[0].plot(yz_line, 'r--', color = 'green')
         axs[0].set_ylim(0.0, 1.1)
-        plt.legend(labels1, loc='best')
+        plt.legend(labels, loc='best')
         axs[1].scatter(Eng_df_with_prob.loc[:,'48Ti'], Eng_df_with_prob.loc[:,'Engineered'], color = 'blue')
         axs[1].set_xlim(min(Nat_df_with_prob['48Ti']), 1E-13)
         axs[1].set_xscale('log')
@@ -358,8 +361,8 @@ class mltrain:
         if savefigs == None:
             plt.savefig('figures/Timass' + str(keys) + '.png', dpi =300)
 
-        topnat= conditional_probabilities(just_data(Nat_df_with_prob), '48Ti')[2:12]
-        topeng= conditional_probabilities(just_data(Eng_df_with_prob), '48Ti')[2:12]
+        topnat= sphandle.conditional_probabilities(sphandle.just_data(Nat_df_with_prob), '48Ti')[2:12]
+        topeng= sphandle.conditional_probabilities(sphandle.just_data(Eng_df_with_prob), '48Ti')[2:12]
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,5), dpi=300)
         ax1.bar(topnat.index, topnat)
         ax1.set_ylabel('Isotope Frequency')
@@ -374,11 +377,11 @@ class mltrain:
             plt.savefig('figures/isotopes' + str(keys) + '.png', dpi = 300)
 
         if flag == 1:
-            graphmaker(Nat_df_with_prob, 'Natural', 0.85, keys, Nat_df_with_prob, savefigs, opencircles = True)
-            graphmaker(Eng_df_with_prob, 'Engineered', 0.85, keys, Nat_df_with_prob, savefigs, opencircles = True)
+            mltrain.graphmaker(Nat_df_with_prob, 'Natural', 0.85, keys, Nat_df_with_prob, savefigs, opencircles = True)
+            mltrain.graphmaker(Eng_df_with_prob, 'Engineered', 0.85, keys, Nat_df_with_prob, savefigs, opencircles = True)
         else:
-            graphmakerm(Nat_df_with_prob, 'Natural', 0.85, 0.5, keys, Nat_df_with_prob, savefigs, opencircles = True)
-            graphmakerm(Eng_df_with_prob, 'Engineered', 0.85, 0.5, keys, Nat_df_with_prob, savefigs, opencircles = True)
+            mltrain.graphmakerm(Nat_df_with_prob, 'Natural', 0.85, 0.5, keys, Nat_df_with_prob, savefigs, opencircles = True)
+            mltrain.graphmakerm(Eng_df_with_prob, 'Engineered', 0.85, 0.5, keys, Nat_df_with_prob, savefigs, opencircles = True)
 
 
         if returns != None:
@@ -391,7 +394,7 @@ class mltrain:
         #repeat this process M amount of times
         for _ in range(m):
             #holdout 20% of data. 
-            holdoutdata, holdoutlabels, trainingdatanat, trainingeng = mltrain.holdoutdata(df, 0.2)
+            holdoutdata, holdoutlabels, trainingdatanat, trainingdataeng = mltrain.holdoutdata(df, 0.2)
             #create a NP array from 0.05 to 1.05 with 0.05 step increment
             p = np.arange(0.05, 1.05, 0.05)
             #create an empty dataframe

@@ -151,10 +151,10 @@ class mltrain:
         bot = df[df[label] < upperbound]
         purebot = percentdfpure[percentdfpure[label] < upperbound]
     
-        axs[1].scatter(bot['48Ti'], bot[label], linewidths = 0.75, edgecolors = 'white', facecolors = '#ff7f0e')
-        axs[1].scatter(top['48Ti'], top[label], linewidths = 0.75, edgecolors = 'white', facecolors = '#1f77b4')
-        axs[1].scatter(purebot['48Ti'], purebot[label], linewidths = 0.75, edgecolors = 'white', facecolors = '#ff7f0e', marker = 'p')
-        axs[1].scatter(puretop['48Ti'], puretop[label], linewidths = 0.75, edgecolors = 'white', facecolors = '#1f77b4', marker = 'p')
+        axs[1].scatter(bot['48Ti'], bot[label], linewidths = 0.75, edgecolors = 'white', facecolors = 'orange')
+        axs[1].scatter(top['48Ti'], top[label], linewidths = 0.75, edgecolors = 'white', facecolors = 'green')
+        axs[1].scatter(purebot['48Ti'], purebot[label], linewidths = 0.75, edgecolors = 'white', facecolors = 'orange', marker = 'p')
+        axs[1].scatter(puretop['48Ti'], puretop[label], linewidths = 0.75, edgecolors = 'white', facecolors = 'green', marker = 'p')
         axs[1].set_xscale('log')
         axs[1].yaxis.set_major_formatter(mtick.PercentFormatter(1.0))
         axs[1].set_xlim([min(natdf['48Ti']), 10**-13])

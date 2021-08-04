@@ -131,7 +131,7 @@ class mltrain:
 
         fig, axs = plt.subplots(1, 2, figsize=(16,4), dpi=300)
         #gridspec_kw={'width_ratios': [2.5, 1]})
-        ax1 = sns.barplot('index', 'value', 'variable', data = percentdf, ax = axs[0], color = ['green', 'orange', 'red'])
+        ax1 = sns.barplot('index', 'value', 'variable', data = percentdf, ax = axs[0], palette = ['green', 'orange', 'red'])
         ax1.set_ylabel('Isotope Frequency', fontsize = 16)
         ax1.tick_params(axis='both', which='major', labelsize=14)
         ax1.set_xlabel('')

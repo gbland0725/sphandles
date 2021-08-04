@@ -129,8 +129,9 @@ class mltrain:
         percentdf.reset_index(inplace = True)
         percentdf = pd.melt(percentdf[1:13], id_vars = ['index'], value_vars = ['toppercent', 'bottompercent'])
 
-        fig, axs = plt.subplots(1, 2, figsize=(16,4), dpi=300, gridspec_kw={'width_ratios': [2.5, 1]})
-        ax1 = sns.barplot('index', 'value', 'variable', data = percentdf, ax = axs[0])
+        fig, axs = plt.subplots(1, 2, figsize=(16,4), dpi=300)
+        #gridspec_kw={'width_ratios': [2.5, 1]})
+        ax1 = sns.barplot('index', 'value', 'variable', data = percentdf, ax = axs[0], color = ['green', 'orange'])
         ax1.set_ylabel('Isotope Frequency', fontsize = 16)
         ax1.tick_params(axis='both', which='major', labelsize=14)
         ax1.set_xlabel('')

@@ -326,11 +326,32 @@ class mltrain:
         piechart_data = [total_correct, total_uncertain, total_mis]
         #piechart_data_labels = 'Classified', 'Uncertain', 'Misclassified'
 
+        #get the top and bottom percent of Nat and Eng
+        #parse particles by confidence probability to the correct category
+        just_Nat_df = sphandle.just_data(Nat_df_with_prob)
+        just_Nat_df_pure = sphandle.isotope_pure(just_Nat_df.columns(drop = '46Ti'), '48Ti')
+        just_Eng_df = sphandle.just_data(Eng_df_with_prob)
+        just_Eng_df_pure = sphandle.isotope_pure(just_Eng_df.columns(drop = '46Ti'), '48Ti')
+
+        topnat = just_Nat_df[just_Nat_df['Natural'] > 0.85]
+        puretopnat = just_Nat_df_pure[just_Nat_df_pure['Natural'] > 0.85]
+        botnat = just_Nat_df[just_Nat_df['Natural'] < 0.85]
+        purebotnat = just_Nat_df_pure[just_Nat_df_pure['Natural'] < 0.85]
+
+        topeng = just_Eng_df[just_Eng_df['Natural'] > 0.85]
+        puretopeng = just_Eng_df_pure[just_Eng_df_pure['Natural'] > 0.85]
+        boteng = just_Eng_df[just_Eng_df['Natural'] < 0.85]
+        pureboteng = just_Eng_df_pure[just_Eng_df_pure['Natural'] < 0.85]
+
         #Plot Ti
         xy_line = (0.15, 0.15)
         yz_line = (0.85, 0.85)
         fig, axs = plt.subplots(1, 3, figsize=(16,5), dpi=300)
-        axs[0].scatter(Nat_df_with_prob.loc[:,'48Ti'], Nat_df_with_prob.loc[:,'Natural'], color = 'brown')
+        #axs[0].scatter(Nat_df_with_prob.loc[:,'48Ti'], Nat_df_with_prob.loc[:,'Natural'], color = 'brown')
+        axs[0].scatter(topnat['48Ti'], topnat['Natural'], color = "green")
+        axs[0].scatter(puretopnat['48Ti'], puretopnat['Natural'], markers = 'X', color = "green")
+        axs[0].scatter(botnat['48Ti'], botnat['Natural'], color = "orange")
+        axs[0].scatter(purebotnat['48Ti'], purebotnat['Natural'], markers = 'X', color = "orange")
         axs[0].set_xlim(min(Nat_df_with_prob['48Ti']), 1E-13)
         axs[0].set_xscale('log')
         axs[0].set_xlabel('Ti Mass (g)', fontsize = 16)
@@ -338,11 +359,14 @@ class mltrain:
         #axs[0].set_ylabel('Prediction probability of Natural category', fontsize = 16)
         axs[0].yaxis.set_major_formatter(mtick.PercentFormatter(1.0))
         axs[0].set_title(naturalkeys)
-        axs[0].plot(xy_line, 'r--', color = 'red')
-        axs[0].plot(yz_line, 'r--', color = 'green')
+        axs[0].plot(yz_line, 'r--', color = 'black')
         axs[0].set_ylim(0.0, 1.1)
         plt.legend(labels, loc='best')
-        axs[1].scatter(Eng_df_with_prob.loc[:,'48Ti'], Eng_df_with_prob.loc[:,'Engineered'], color = 'blue')
+        #axs[1].scatter(Eng_df_with_prob.loc[:,'48Ti'], Eng_df_with_prob.loc[:,'Engineered'], color = 'blue')
+        axs[1].scatter(topeng['48Ti'], topeng['Natural'], color = "green")
+        axs[1].scatter(puretopeng['48Ti'], puretopeng['Natural'], markers = 'X', color = "green")
+        axs[1].scatter(boteng['48Ti'], botnat['Natural'], color = "orange")
+        axs[1].scatter(pureboteng['48Ti'], purebotnat['Natural'], markers = 'X', color = "orange")
         axs[1].set_xlim(min(Nat_df_with_prob['48Ti']), 1E-13)
         axs[1].set_xscale('log')
         axs[1].set_xlabel('Ti Mass (g)', fontsize = 16)

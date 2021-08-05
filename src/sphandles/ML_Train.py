@@ -352,7 +352,7 @@ class mltrain:
         axs[0].set_xlim(min(Nat_df_with_prob['48Ti']), 1E-13)
         axs[0].set_xscale('log')
         axs[0].set_xlabel('Ti Mass (g)', fontsize = 16)
-        axs[0].tick_params(axis = 'both', which = 'major', labelsize = 14)
+        axs[0].tick_params(axis = 'both', which = 'major', labelsize = 18)
         #axs[0].set_ylabel('Prediction probability of Natural category', fontsize = 16)
         axs[0].yaxis.set_major_formatter(mtick.PercentFormatter(1.0))
         axs[0].set_title(naturalkeys)
@@ -367,7 +367,7 @@ class mltrain:
         axs[1].set_xlim(min(Nat_df_with_prob['48Ti']), 1E-13)
         axs[1].set_xscale('log')
         axs[1].set_xlabel('Ti Mass (g)', fontsize = 16)
-        axs[1].tick_params(axis = 'both', which = 'major', labelsize = 14)
+        axs[1].tick_params(axis = 'both', which = 'major', labelsize = 18)
         #axs[1].set_ylabel('Prediction probability of Engineered category', fontsize = 16)
         axs[1].yaxis.set_major_formatter(mtick.PercentFormatter(1.0))
         axs[1].set_title(engineeredkeys)
@@ -379,7 +379,7 @@ class mltrain:
         axs[2].axis('equal')
         fig.set_facecolor('white')
         if savefigs == None:
-            plt.savefig('figures/Timass' + str(keys) + '.png', dpi =300)
+            plt.savefig('figures/Timass' + str(keys) + '.png', dpi =500)
 
         topnat= sphandle.conditional_probabilities(sphandle.just_data(Nat_df_with_prob), '48Ti')[2:12]
         topeng= sphandle.conditional_probabilities(sphandle.just_data(Eng_df_with_prob), '48Ti')[2:12]
